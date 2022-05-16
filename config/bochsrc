@@ -1,0 +1,30 @@
+memory: host=32, guest=32
+
+romimage: file=/usr/share/bochs/BIOS-bochs-latest 
+vgaromimage: file=/usr/share/bochs/VGABIOS-lgpl-latest
+display_library: term
+
+# Boot
+boot: disk
+
+# ATA
+ata0-master: type=disk, path="./build/image/disk.img", mode=flat, cylinders=10, heads=16, spt=63
+
+# PCI
+# pci: enabled=1, chipset=i440fx, slot1=none, slot2=none, slot3=none, slot4=none, slot5=none
+
+# Sound
+sound: waveoutdrv=dummy, waveout=none, waveindrv=dummy, wavein=none, midioutdrv=dummy, midiout=none
+
+# CPU
+cpu: ips=1000000, count=1
+
+# Misc
+# debugger_log: -
+# log: -
+mouse: enabled=0
+clock: sync=none, time0=local, rtc_sync=0
+
+# Com
+com1: enabled=1, mode=term, dev=/dev/pts/4
+

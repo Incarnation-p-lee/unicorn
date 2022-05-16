@@ -1,6 +1,6 @@
 timeout 30
 
-title	excalibur
+title	unicorn
 	root (hd0,0)
 	kernel /boot/kernel
 	module /boot/initrd
