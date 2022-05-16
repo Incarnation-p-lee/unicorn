@@ -56,7 +56,7 @@ start:
 
 ; Start to execute kernel
     cli                          ; Disable interrupts
-    call entry                   ; Call main function in C
+;   call entry                   ; Call main function in C, disable it for now.
     jmp $
 
 ; Global function for external call.
