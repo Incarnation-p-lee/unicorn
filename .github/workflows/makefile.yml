@@ -18,7 +18,7 @@ jobs:
       run: sudo apt-get install gcc-multilib
     
     - name: Run build
-      run:  make V=1
+      run:  make
       
     - name: Post codecov
       run: bash <(curl -s https://codecov.io/bash)
