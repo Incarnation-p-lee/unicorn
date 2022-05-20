@@ -38,7 +38,7 @@ $(out):
 
 $(TARGET):$(asm_obj) $(c_obj) $(go_archive)
 	@echo "Link     $@"
-	$(CC) $(LFLAG) $^ -o $@
+	$(CC) $(LFLAG) $^ -o $@ -lpthread
 
 $(asm_obj):$(asm_src)
 	@echo "Compile  $<"
