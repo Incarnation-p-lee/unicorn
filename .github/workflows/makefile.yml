@@ -11,11 +11,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: ilammy/setup-nasm@v1
     - uses: actions/checkout@v3
+    - uses: ilammy/setup-nasm@v1
+
+    - name: Install Gcc Multilib
+      run: sudo apt-get install gcc-multilib
     
     - name: Run build
       run:  make
       
     - name: Post codecov
       run: bash <(curl -s https://codecov.io/bash)
+

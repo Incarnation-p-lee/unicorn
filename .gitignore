@@ -5,6 +5,7 @@
 *.so
 *.dylib
 *.o
+*.a
 unicorn/*
 
 # Test binary, built with `go test -c`
