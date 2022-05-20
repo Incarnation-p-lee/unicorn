@@ -1,44 +1,57 @@
 CC                 :=$(if $(V), gcc, @gcc)
 ASM                :=$(if $(V), nasm, @nasm)
-LD                 :=$(if $(V), ld, @ld)
 GO                 :=$(if $(V), go, @go)
 RM                 :=rm -rf
 MKDIR              :=$(if $(V), mkdir, @mkdir)
 
-base               :=$(shell pwd)
+base               :=.
 config             :=$(base)/config
 out                :=$(base)/unicorn
-obj_out            :=$(out)/obj
 image_out          :=$(base)/build/image
 loop               :=/dev/loop6
 grub               :=$(base)/grub
 
-CFLAG              =-nostdlib -nostdinc -fno-builtin -fno-stack-protector -m32 -Wall -Wextra -Werror -c
-LD_SCRIPT          =link.ld
-LFLAG              =-T$(config)/$(LD_SCRIPT) -m elf_i386
+CFLAG              =-m32 -Wall -Wextra -Werror -c
+LFLAG              =-m32 -static
 ASMFLAG            =-felf
+GOFLAG             =-buildmode=c-archive
 
 TARGET             =$(out)/kernel
 IMAGE              =$(image_out)/disk.img
 
 .PHONY: help clean image
 
-boot_obj           =$(obj_out)/boot.o
-boot_src           =$(base)/boot/boot.s
+go_src             =$(shell find . -name *.go | grep -v _test.go)
+go_archive         =$(subst .go,.a, $(go_src))
 
-all: $(obj_out) $(TARGET)
+c_src              =$(shell find . -name *.c)
+c_obj              =$(subst .c,.o, $(c_src))
 
-$(obj_out):
+asm_src            =$(shell find . -name *.s)
+asm_obj            =$(subst .s,.o, $(asm_src))
+
+all: $(out) $(TARGET)
+
+$(out):
 	@echo "MakeDir  $@"
 	$(MKDIR) -p $@
 
-$(TARGET):$(boot_obj)
+$(TARGET):$(asm_obj) $(c_obj) $(go_archive)
 	@echo "Link     $@"
-	$(LD) $(LFLAG) $^ -o $@
+	$(CC) $(LFLAG) $^ -o $@
 
-$(boot_obj):$(boot_src)
+$(asm_obj):$(asm_src)
 	@echo "Compile  $<"
 	$(ASM) $(ASMFLAG) $< -o $@
+
+$(c_obj):$(c_src)
+	@echo "Compile  $<"
+	$(CC) $(CFLAG) $< -o $@
+
+$(go_archive):%.a:%.go
+	@echo "Build    $<"
+	$(GO) env -w GOARCH=386 CGO_ENABLED=1
+	$(GO) build -o $@ $(GOFLAG) $<
 
 image:all
 	@echo "Build    $(IMAGE)"
@@ -52,5 +65,5 @@ image:all
 	@sudo losetup -d $(loop)
 
 clean:
-	$(RM) $(out)
+	$(RM) $(out) $(asm_obj) $(c_obj) $(go_archive)
 
