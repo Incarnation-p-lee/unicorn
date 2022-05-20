@@ -11,8 +11,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: ilammy/setup-nasm@v1
     - uses: actions/checkout@v3
+    - uses: ilammy/setup-nasm@v1
+    - uses: egor-tensin/setup-gcc@v1
     
     - name: Run build
       run:  make
