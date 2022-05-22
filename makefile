@@ -7,12 +7,14 @@ MKDIR              :=$(if $(V), mkdir, @mkdir)
 
 base               :=.
 config             :=$(base)/config
+inc                :=$(base)/common/inc
 out                :=$(base)/unicorn
 image_out          :=$(base)/build/image
 loop               :=/dev/loop6
 grub               :=$(base)/grub
 
-CFLAG              =-m32 -Wall -Wextra -Werror -c
+CFLAG              =-nostdlib -nostdinc -fno-builtin -fno-stack-protector -m32 \
+                    -Wall -Wextra -Werror -I$(inc) -c
 LFLAG              =-m elf_i386 -T$(config)/link.ld
 ASMFLAG            =-felf
 
