@@ -22,11 +22,6 @@ import (
 )
 
 const (
-    MonitorAddress = 0xb8000
-
-    MonitorWidth = 80
-    MonitorHeight = 25
-
     black = 0
     blank = 0x20
     white = 15
@@ -37,7 +32,11 @@ const (
     vgaCursorHigh = 14
     vgaCursorLow = 15
 
-    monitorSize = MonitorWidth * MonitorHeight
+    monitorAddress = 0xb8000
+
+    monitorWidth = 80
+    monitorHeight = 25
+    monitorSize = monitorWidth * monitorHeight
 )
 
 var (
@@ -46,14 +45,14 @@ var (
 )
 
 func writeDataToMonitor(data int16, offset int) {
-    address := MonitorAddress + offset * 2
+    address := monitorAddress + offset * 2
     addressInt16Ptr := (*int16)(unsafe.Pointer(uintptr(address)))
 
     *addressInt16Ptr = data
 }
 
 func moveCursor() {
-    cursorInMonitor := cursorY * MonitorWidth + cursorX
+    cursorInMonitor := cursorY * monitorWidth + cursorX
 
     C.write_byte(C.int(vgaCtrlReg), C.int(vgaCursorHigh))
     C.write_byte(C.int(vgaDataReg), C.int(cursorInMonitor >> 8))
