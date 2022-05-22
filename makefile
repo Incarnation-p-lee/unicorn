@@ -1,6 +1,7 @@
 CC                 :=$(if $(V), gcc, @gcc)
 ASM                :=$(if $(V), nasm, @nasm)
 GO                 :=$(if $(V), go, @go)
+LD                 :=$(if $(V), ld, @ld)
 RM                 :=rm -rf
 MKDIR              :=$(if $(V), mkdir, @mkdir)
 
@@ -12,17 +13,13 @@ loop               :=/dev/loop6
 grub               :=$(base)/grub
 
 CFLAG              =-m32 -Wall -Wextra -Werror -c
-LFLAG              =-m32 -static
+LFLAG              =-m elf_i386 -T$(config)/link.ld
 ASMFLAG            =-felf
-GOFLAG             =-buildmode=c-archive
 
 TARGET             =$(out)/kernel
 IMAGE              =$(image_out)/disk.img
 
 .PHONY: help clean image
-
-go_src             =$(shell find . -name *.go | grep entry.go)
-go_archive         =$(subst .go,.a, $(go_src))
 
 c_src              =$(shell find . -name *.c)
 c_obj              =$(subst .c,.o, $(c_src))
@@ -36,9 +33,9 @@ $(out):
 	@echo "MakeDir  $@"
 	$(MKDIR) -p $@
 
-$(TARGET):$(asm_obj) $(c_obj) $(go_archive)
+$(TARGET):$(asm_obj) $(c_obj)
 	@echo "Link     $@"
-	$(CC) $(LFLAG) $^ -o $@ -lpthread
+	$(LD) $(LFLAG) $^ -o $@
 
 $(asm_obj):$(asm_src)
 	@echo "Compile  $<"
@@ -47,11 +44,6 @@ $(asm_obj):$(asm_src)
 $(c_obj):%o:%c
 	@echo "Compile  $<"
 	$(CC) $(CFLAG) $< -o $@
-
-$(go_archive):%.a:%.go
-	@echo "Build    $<"
-	$(GO) env -w GOARCH=386 CGO_ENABLED=1
-	$(GO) build -o $@ $(GOFLAG) $<
 
 image:all
 	@echo "Build    $(IMAGE)"
@@ -65,5 +57,5 @@ image:all
 	@sudo losetup -d $(loop)
 
 clean:
-	$(RM) $(out) $(asm_obj) $(c_obj) $(go_archive)
+	$(RM) $(out) $(asm_obj) $(c_obj)
 
