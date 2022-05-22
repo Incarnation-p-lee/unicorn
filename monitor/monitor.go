@@ -63,7 +63,7 @@ func moveCursor() {
 
 // ClearMonitor will make the monitor all blank, and mov (x, y) to (0, 0).
 func ClearMonitor() {
-    data := (((blank << 4 | white)) << 8) | blank
+    data := (((black << 4 | white)) << 8) | blank
 
     for i := 0; i < monitorSize; i++ {
         writeDataToMonitor(int16(data), i)
