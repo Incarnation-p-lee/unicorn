@@ -1,5 +1,4 @@
-// The Entry defined in golang, and build with cgo.
-extern void Entry();
+#include "entry.h"
 
 int main() {
     Entry();

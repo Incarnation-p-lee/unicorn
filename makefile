@@ -21,7 +21,7 @@ IMAGE              =$(image_out)/disk.img
 
 .PHONY: help clean image
 
-go_src             =$(shell find . -name *.go | grep -v _test.go)
+go_src             =$(shell find . -name *.go | grep entry.go)
 go_archive         =$(subst .go,.a, $(go_src))
 
 c_src              =$(shell find . -name *.c)
@@ -44,7 +44,7 @@ $(asm_obj):$(asm_src)
 	@echo "Compile  $<"
 	$(ASM) $(ASMFLAG) $< -o $@
 
-$(c_obj):$(c_src)
+$(c_obj):%o:%c
 	@echo "Compile  $<"
 	$(CC) $(CFLAG) $< -o $@
 
