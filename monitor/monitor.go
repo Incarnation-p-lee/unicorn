@@ -45,8 +45,7 @@ var (
 )
 
 func writeDataToMonitor(data int16, offset int) {
-    address := monitorAddress + offset * 2
-    addressInt16Ptr := (*int16)(unsafe.Pointer(uintptr(address)))
+    addressInt16Ptr := (*int16)(unsafe.Pointer(uintptr(monitorAddress) + offset * 2))
 
     *addressInt16Ptr = data
 }
