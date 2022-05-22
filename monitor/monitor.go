@@ -40,8 +40,8 @@ const (
 )
 
 var (
-    cursorX int = 0
-    cursorY int = 0
+    cursorX int
+    cursorY int
 )
 
 func writeDataToMonitor(data int16, offset int) {
