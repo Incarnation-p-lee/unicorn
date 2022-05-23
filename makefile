@@ -1,6 +1,5 @@
 CC                 :=$(if $(V), gcc, @gcc)
 ASM                :=$(if $(V), nasm, @nasm)
-GO                 :=$(if $(V), go, @go)
 LD                 :=$(if $(V), ld, @ld)
 RM                 :=rm -rf
 MKDIR              :=$(if $(V), mkdir, @mkdir)
