@@ -16,9 +16,9 @@ CFLAG              =-nostdlib -nostdinc -fno-builtin -fno-stack-protector -m32 \
                     -Wall -Wextra -Werror -I$(inc) -c
 LFLAG              =-m elf_i386 -T$(config)/link.ld
 
-CFLAG_TEST         =-m32 -fprofile-arcs -ftest-coverage -Wall -Wextra -Werror \
-                    -I$(inc) -c
-LFLAG_TEST         =-m32
+CFLAG_TEST         =-m32 -coverage -fprofile-arcs -ftest-coverage -Wall \
+                    -Wextra -Werror -I$(inc) -c
+LFLAG_TEST         =-m32 -coverage
 
 ASMFLAG            =-felf
 
@@ -33,6 +33,8 @@ c_obj              =$(subst .c,.o, $(c_src))
 
 c_test_src         =$(shell find . -name *.c | grep test)
 c_test_obj         =$(subst .c,.o, $(c_test_src))
+c_test_gcno        =$(subst .c,.gcno, $(c_test_src))
+c_test_gcda        =$(subst .c,.gcda, $(c_test_src))
 
 asm_src            =$(shell find . -name *.s)
 asm_obj            =$(subst .s,.o, $(asm_src))
@@ -65,8 +67,8 @@ $(TARGET_TEST):$(c_test_obj)
 
 test:$(out) $(TARGET_TEST)
 	@echo "Test     $(TARGET_TEST)"
+	@echo "Generate code coverage"
 	@$(TARGET_TEST)
-	@lcov -c -i -d ./ -o coverage.info
 
 image:all
 	@echo "Build    $(IMAGE)"
@@ -80,5 +82,5 @@ image:all
 	@sudo losetup -d $(loop)
 
 clean:
-	$(RM) $(out) $(asm_obj) $(c_obj) $(c_test_obj)
+	$(RM) $(out) $(asm_obj) $(c_obj) $(c_test_obj) $(c_test_gcno) $(c_test_gcda)
 

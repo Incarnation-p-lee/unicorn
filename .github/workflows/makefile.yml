@@ -19,6 +19,9 @@ jobs:
     
     - name: Run build
       run:  make
+
+    - name: Run test
+      run:  make test
       
     - name: Post codecov
       run: bash <(curl -s https://codecov.io/bash)
