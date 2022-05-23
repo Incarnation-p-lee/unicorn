@@ -66,6 +66,7 @@ $(TARGET_TEST):$(c_test_obj)
 test:$(out) $(TARGET_TEST)
 	@echo "Test     $(TARGET_TEST)"
 	@$(TARGET_TEST)
+	@lcov -c -i -d ./ -o coverage.info
 
 image:all
 	@echo "Build    $(IMAGE)"

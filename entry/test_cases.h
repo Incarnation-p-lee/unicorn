@@ -3,6 +3,8 @@
 
 #include "test.h"
 
+extern void destroy_test_suite(s_test_suite_t *suite);
+extern void print_test_suite(s_test_suite_t *suite);
 extern void test_clear_monitor(s_test_suite_t *suite);
 extern void write_byte(uint16 port, uint8 val);
 extern s_test_suite_t * create_test_suite();

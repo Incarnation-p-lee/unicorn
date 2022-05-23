@@ -5,6 +5,9 @@ int main() {
 
     test_clear_monitor(suite);
 
+    print_test_suite(suite);
+    destroy_test_suite(suite);
+
     return 0;
 }
 
