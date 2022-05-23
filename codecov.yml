@@ -1,0 +1,23 @@
+codecov:
+  branch: master 
+
+coverage:
+  round: down
+  precision: 2
+
+  status:
+    project:
+      default:
+        enabled: yes
+        target: auto
+        if_no_uploads: error
+
+    patch:
+      default:
+        if_no_uploads: error
+
+    changes: true
+
+comment:
+  behavior: default
+

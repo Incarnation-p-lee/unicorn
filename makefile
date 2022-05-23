@@ -66,7 +66,10 @@ $(TARGET_TEST):$(c_test_obj)
 test:$(out) $(TARGET_TEST)
 	@echo "Test     $(TARGET_TEST)"
 	@$(TARGET_TEST)
+	@for file in `find . | grep -E \"gc(da|no)$\"`; do mv ${file} .; done
+	@echo "Generate coverage.info"
 	@lcov -c -i -d ./ -o coverage.info
+	@$(RM) *.gcda *.gcno
 
 image:all
 	@echo "Build    $(IMAGE)"
