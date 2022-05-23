@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 #include "test.h"
 
 static inline void
@@ -32,6 +33,15 @@ create_test_suite() {
     return suite;
 }
 
+void
+destroy_test_suite(s_test_suite_t *suite) {
+    if (suite->all_results != NULL) {
+        free(suite->all_results);
+    }
+
+    free(suite);
+}
+
 static inline void
 append_rest_result(s_test_suite_t *suite, char *name, bool is_pass)
 {
@@ -57,5 +67,17 @@ void
 append_pass_test_result(s_test_suite_t *suite, char *name)
 {
     append_rest_result(suite, name, true);
+}
+
+void
+print_test_suite(s_test_suite_t *suite)
+{
+    s_test_result_t *result;
+
+    for (uint32 i = 0; i < suite->index; i++) {
+        result = &suite->all_results[i];
+
+        printf("%s %s\n", result->is_pass ? "Pass": "Fail", result->test_name);
+    }
 }
 
