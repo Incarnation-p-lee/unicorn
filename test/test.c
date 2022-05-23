@@ -72,10 +72,8 @@ append_pass_test_result(s_test_suite_t *suite, char *name)
 void
 print_test_suite(s_test_suite_t *suite)
 {
-    s_test_result_t *result;
-
     for (uint32 i = 0; i < suite->index; i++) {
-        result = &suite->all_results[i];
+        s_test_result_t *result = &suite->all_results[i];
 
         printf("%s %s\n", result->is_pass ? "Pass": "Fail", result->test_name);
     }
