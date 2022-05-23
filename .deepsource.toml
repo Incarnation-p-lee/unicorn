@@ -1,7 +1,7 @@
 version = 1
 
 [[analyzers]]
-name = "go"
+name = "c"
 enabled = true
 
   [analyzers.meta]
