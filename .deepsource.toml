@@ -1,8 +1,9 @@
 version = 1
 
 [[analyzers]]
-name = "test-coverage"
+name = "secrets"
 enabled = true
 
-  [analyzers.meta]
-  import_root = "github.com/Incarnation-p-lee/unicorn"
+[[analyzers]]
+name = "test-coverage"
+enabled = true
