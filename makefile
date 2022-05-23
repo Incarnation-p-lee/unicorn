@@ -15,15 +15,24 @@ grub               :=$(base)/grub
 CFLAG              =-nostdlib -nostdinc -fno-builtin -fno-stack-protector -m32 \
                     -Wall -Wextra -Werror -I$(inc) -c
 LFLAG              =-m elf_i386 -T$(config)/link.ld
+
+CFLAG_TEST         =-m32 -fprofile-arcs -ftest-coverage -Wall -Wextra -Werror \
+                    -I$(inc) -c
+LFLAG_TEST         =-m32
+
 ASMFLAG            =-felf
 
 TARGET             =$(out)/kernel
+TARGET_TEST        =$(out)/kernel_test
 IMAGE              =$(image_out)/disk.img
 
-.PHONY: help clean image
+.PHONY: help clean image test
 
-c_src              =$(shell find . -name *.c)
+c_src              =$(shell find . -name *.c | grep -v test)
 c_obj              =$(subst .c,.o, $(c_src))
+
+c_test_src         =$(shell find . -name *.c | grep test)
+c_test_obj         =$(subst .c,.o, $(c_test_src))
 
 asm_src            =$(shell find . -name *.s)
 asm_obj            =$(subst .s,.o, $(asm_src))
@@ -46,6 +55,18 @@ $(c_obj):%o:%c
 	@echo "Compile  $<"
 	$(CC) $(CFLAG) $< -o $@
 
+$(c_test_obj):%o:%c
+	@echo "Compile  $<"
+	$(CC) $(CFLAG_TEST) $< -o $@
+
+$(TARGET_TEST):$(c_test_obj)
+	@echo "Link     $@"
+	$(CC) $(LFLAG_TEST) $^ -o $@ -lgcov
+
+test:$(out) $(TARGET_TEST)
+	@echo "Test     $(TARGET_TEST)"
+	@$(TARGET_TEST)
+
 image:all
 	@echo "Build    $(IMAGE)"
 	@sudo losetup -o 1048576 $(loop) $(IMAGE)
@@ -58,5 +79,5 @@ image:all
 	@sudo losetup -d $(loop)
 
 clean:
-	$(RM) $(out) $(asm_obj) $(c_obj)
+	$(RM) $(out) $(asm_obj) $(c_obj) $(c_test_obj)
 
